@@ -1,6 +1,6 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-refs = {
+const refs = {
   startBtn: document.querySelector('button'),
   firstDelayInput: document.querySelector('input[name=delay]'),
   delayInput: document.querySelector('input[name=step]'),
@@ -12,12 +12,12 @@ let currentAmount = 0;
 function createPromise(position, delay) {
   const shouldResolve = Math.random() > 0.3;
   if (shouldResolve) {
-    Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`, {
+    Notify.success(`✅ Fulfilled promise ${position+1} in ${delay}ms`, {
       useIcon: false,
       clickToClose: true,
     });
   } else {
-    Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`, {
+    Notify.failure(`❌ Rejected promise ${position+1} in ${delay}ms`, {
       useIcon: false,
       clickToClose: true,
     });

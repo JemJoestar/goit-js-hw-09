@@ -14,15 +14,20 @@ const refs = {
 
 let selectedDate
 
+let dateChangeIntervalId
+
 const options = {
     enableTime: true,
     time_24hr: true,
     defaultDate: new Date(),
     minuteIncrement: 1,
     onClose(selectedDates) {
-        if (selectedDates[0] > Date.now()) {
+        if(!selectedDates){
+            return
+        }
+        if (selectedDates[0].getTime() > Date.now()) {
             refs.startBtn.disabled = false
-            selectedDate = selectedDates[0]
+            selectedDate = selectedDates[0].getTime()
         }else{
         refs.startBtn.disabled = true
         // alert("Please choose a date in the future")
@@ -37,21 +42,24 @@ const options = {
 
 flatpickr('#datetime-picker', options);
 
-refs.dateInput.addEventListener("change", () => {
-    selectedDate = options.onClose()
-    console.log(selectedDate)
-})
-refs.startBtn.addEventListener("click", () =>{
 
+refs.startBtn.addEventListener("click", (event) =>{
+    event.currentTarget.disabled = true
     refs.dateInput.disabled = true
 
     changeDate(selectedDate)
-    setInterval(changeDate, 1000, selectedDate)
+    dateChangeIntervalId = setInterval(changeDate, 1000, selectedDate)
 })
 
 function changeDate(futureDate){
     const currentDate = Date.now()
     const dateDifference = (futureDate - currentDate)
+    if(dateDifference <= 0){
+
+        console.log(dateDifference)
+        clearInterval(dateChangeIntervalId)
+        return
+    }
     const {seconds, minutes, hours, days} = convertMs(dateDifference)
     refs.displayDays.textContent = addLeadingZero(days)
 
@@ -86,4 +94,3 @@ function addLeadingZero(value){
     return value.toString().padStart(2,"0")
 }
 
-console.log(options.onClose());
